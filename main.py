@@ -3,18 +3,28 @@ import numpy as np
 import pandas as pd
 import math
 
-def load_dataset(filename):
+def load_dataset(filename, sheetTab):
 
-    df = pd.read_excel(filename, sheet_name='Subscription_Data')
+    sheets = {
+        "A": { 
+            "name": "Subscription_Data", 
+            "y_column": "Purchased_Premium",
+            "x_columns": ["CustomerID", "Purchased_Premium"]
+        }, 
+        "B": {
+            "name": "Medical_Data",
+            "x_columns": ["PatientID", "Outcome_Diabetes"],
+            "y_column": "Outcome_Diabetes"
+        },
+    }
+
+    sheet = sheets[sheetTab]
+    df = pd.read_excel(filename, sheet_name=sheet["name"])
 
     
-    x = df.drop(columns=['CustomerID', 'Purchased_Premium']).to_numpy().tolist()
-    y = df['Purchased_Premium'].to_numpy().tolist()
+    x = df.drop(columns=sheet["x_columns"]).to_numpy().tolist()
+    y = df[sheet["y_column"]].to_numpy().tolist()
     return x, y
-
-
-filename = "logistic_regression_training_data.xlsx"
-train_x, train_y = load_dataset(filename)
 
 def sigmoid(z):
 
@@ -186,6 +196,9 @@ def predict(value):
     result = value + 0.5
     return int(result)
 
+
+filename = "logistic_regression_training_data.xlsx"
+train_x, train_y = load_dataset(filename, "A")
 feature_number = len(train_x[0])
 weights = [0] * feature_number
 bias = 0
