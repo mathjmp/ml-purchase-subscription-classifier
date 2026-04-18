@@ -8,7 +8,7 @@ def load_dataset(filename):
     df = pd.read_excel(filename, sheet_name='Subscription_Data')
 
     
-    x = df.drop(columns=['Purchased_Premium']).to_numpy().tolist()
+    x = df.drop(columns=['CustomerID', 'Purchased_Premium']).to_numpy().tolist()
     y = df['Purchased_Premium'].to_numpy().tolist()
     return x, y
 
@@ -197,7 +197,7 @@ x = compute_matrix_zscore_normalization(train_x)
 
 weights, bias = compute_gradient(x, train_y, weights, bias, alpha, delta)
 
-index = 0
+index = 2
 target = x[index]
 probability = hypothesis(target, weights, bias)
 prediction = predict(probability)
